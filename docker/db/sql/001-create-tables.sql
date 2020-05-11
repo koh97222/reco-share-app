@@ -1,5 +1,5 @@
 ---- drop ----
-DROP TABLE IF EXISTS `test_table`;
+DROP TABLE IF EXISTS `samples`;
 
 ---- create ----
 create table IF not exists `samples`
@@ -13,5 +13,3 @@ create table IF not exists `samples`
 );
 ---- insert ----
 INSERT INTO samples values (1,'sample',CURRENT_TIMESTAMP(),CURRENT_TIMESTAMP(),NULL)
-
- DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
