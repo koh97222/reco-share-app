@@ -4,6 +4,9 @@
     <div v-if="res != null">
       {{ res }}
     </div>
+    <b-button size="lg" variant="outline-primary">
+      Bootstrap Button
+    </b-button>
   </div>
 </template>
 
