@@ -1,13 +1,11 @@
 <template>
   <div class="home">
-    <button @click="hoge">hogehoge</button>
+    <b-button @click="hoge" size="lg" variant="outline-primary">
+      Post!!<font-awesome-icon icon="coffee" />
+    </b-button>
     <div v-if="res != null">
       {{ res }}
     </div>
-    <b-button size="lg" variant="outline-primary">
-      Bootstrap Button
-    </b-button>
-    <h2>hogehoge<font-awesome-icon icon="coffee" /></h2>
   </div>
 </template>
 
@@ -22,7 +20,6 @@ export default {
       res: null,
     };
   },
-  // createdの中でaxiosを使います。get()の中のURLは、nginx.confで設定してるので、 /api/ になっています。
   created() {},
   methods: {
     hoge() {

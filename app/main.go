@@ -2,7 +2,6 @@ package main
 
 import (
 	"database/sql"
-	"fmt"
 	"net/http"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -14,18 +13,18 @@ import (
 
 // Sample samplesテーブルに対応する構造体
 type Sample struct {
+	Name sql.NullString `gorm:"column:name"`
 	gorm.Model
-	Name sql.NullString
 }
 
 func gormConnect() *gorm.DB {
 	DBMS := "mysql"
-	USER := "root"
-	// PASS := "docker"
-	PROTOCOL := "@tcp(db:3306)"
+	USER := "docker"
+	PASS := "docker"
+	PROTOCOL := "tcp(db:3306)"
 	DBNAME := "recoshare_database"
 
-	CONNECT := USER + ":" + "@" + PROTOCOL + "/" + DBNAME + "?parseTime=true"
+	CONNECT := USER + ":" + PASS + "@" + PROTOCOL + "/" + DBNAME + "?parseTime=true"
 	db, err := gorm.Open(DBMS, CONNECT)
 
 	if err != nil {
@@ -38,16 +37,15 @@ func gormConnect() *gorm.DB {
 func main() {
 	e := echo.New()
 	e.Use(middleware.CORS())
-	// e.File("/", "../reco-share/src/App.vue")
 	e.GET("/", func(c echo.Context) error {
 		return c.String(http.StatusOK, "hello")
 	})
 	e.GET("/sample", func(c echo.Context) error {
-		sample := []Sample{}
 		db := gormConnect()
+		sample := []Sample{}
 		db.Find(&sample)
-		fmt.Println(&sample)
-		return c.JSON(http.StatusOK, &sample)
+		defer db.Close()
+		return c.JSON(http.StatusOK, sample)
 	})
 	e.Logger.Fatal(e.Start(":8082"))
 }
