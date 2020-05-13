@@ -7,6 +7,7 @@
     <b-button size="lg" variant="outline-primary">
       Bootstrap Button
     </b-button>
+    <h2>hogehoge<font-awesome-icon icon="coffee" /></h2>
   </div>
 </template>
 
