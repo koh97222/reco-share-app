@@ -1,7 +1,6 @@
 package main
 
 import (
-	"database/sql"
 	"net/http"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -13,8 +12,16 @@ import (
 
 // Sample samplesテーブルに対応する構造体
 type Sample struct {
-	Name sql.NullString `gorm:"column:name"`
+	Name string `gorm:"column:name"`
 	gorm.Model
+}
+
+func getSample() []Sample {
+	db := gormConnect()
+	sample := []Sample{}
+	db.Find(&sample)
+	defer db.Close()
+	return sample
 }
 
 func gormConnect() *gorm.DB {
@@ -30,7 +37,6 @@ func gormConnect() *gorm.DB {
 	if err != nil {
 		panic(err.Error())
 	}
-	defer db.Close()
 	return db
 }
 
@@ -41,11 +47,7 @@ func main() {
 		return c.String(http.StatusOK, "hello")
 	})
 	e.GET("/sample", func(c echo.Context) error {
-		db := gormConnect()
-		sample := []Sample{}
-		db.Find(&sample)
-		defer db.Close()
-		return c.JSON(http.StatusOK, sample)
+		return c.JSON(http.StatusOK, getSample())
 	})
 	e.Logger.Fatal(e.Start(":8082"))
 }

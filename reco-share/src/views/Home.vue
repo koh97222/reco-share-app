@@ -25,7 +25,7 @@ export default {
     hoge() {
       let _self = this;
       this.$axios.get("http://localhost:8082/sample").then((response) => {
-        _self.res = response;
+        _self.res = response.data;
         console.log(_self.res);
       });
     },
