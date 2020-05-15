@@ -1,12 +1,5 @@
 <template>
-  <div class="home">
-    <b-button @click="hoge" size="lg" variant="outline-primary">
-      Post!!<font-awesome-icon icon="coffee" />
-    </b-button>
-    <div v-if="res != null">
-      {{ res }}
-    </div>
-  </div>
+  <div class="home"></div>
 </template>
 
 <script>
