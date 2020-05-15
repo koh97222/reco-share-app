@@ -1,12 +1,12 @@
 package main
 
 import (
+	"app/db"
 	"net/http"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jinzhu/gorm"
 
-	"github.com/koh97222/reco-share-app/app/db"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
 )
