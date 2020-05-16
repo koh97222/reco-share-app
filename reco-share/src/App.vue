@@ -23,7 +23,4 @@ export default {
   text-align: center;
   color: black;
 }
-.container {
-  background-color: #f4f5f7;
-}
 </style>
