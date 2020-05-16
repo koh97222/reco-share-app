@@ -58,4 +58,7 @@ export default {};
 .navbar-expand-lg {
   border-bottom: 1px solid;
 }
+.ml-5 {
+  padding: 5px;
+}
 </style>
