@@ -13,3 +13,18 @@ create table IF not exists `samples`
 );
 ---- insert ----
 INSERT INTO samples values (1,'sample',CURRENT_TIMESTAMP(),CURRENT_TIMESTAMP(),NULL)
+
+---- drop ----
+DROP TABLE IF EXISTS `users`;
+
+---- create ----
+create table IF not exists `users`
+(
+ `user_id`          INT(20) AUTO_INCREMENT,
+ `user_nm`          VARCHAR(20) NOT NULL,
+ `password`         VARCHAR(20) NOT NULL,
+ `email`            VARCHAR(255) NOT NULL,
+    PRIMARY KEY (`user_id`)
+);
+---- insert ----
+INSERT INTO users values (1,'ゲスト','guest_pass','guest@email.com')

@@ -61,13 +61,17 @@
           </b-row>
           <br />
 
-          <b-button class="mt-3" href="#" :disabled="isInputForm"
+          <b-button
+            class="mt-3"
+            href="#"
+            :disabled="isInputForm"
+            @click="login(users)"
             >Let's go!!<font-awesome-icon icon="ship" class="ml-1"
           /></b-button>
 
           <hr />
           <p>アカウントをお持ちでないですか？</p>
-          <b-button
+          <b-button @click="guestLogin()"
             >おためしログイン<font-awesome-icon icon="sign-in-alt"
           /></b-button>
           <br />
@@ -109,11 +113,20 @@ export default {
   },
 
   methods: {
-    hoge() {
+    login(users) {
       let _self = this;
-      this.$axios.get("http://localhost:8082/sample").then((response) => {
-        _self.res = response.data;
-        console.log(_self.res);
+      _self.$axios.post("http://localhost:8082/login", users).then((r) => {
+        if (r) {
+          console.log(r);
+        }
+      });
+    },
+    guestLogin() {
+      let _self = this;
+      _self.$axios.post("http://localhost:8082/guestlogin").then((r) => {
+        if (r) {
+          console.log(r);
+        }
       });
     },
   },
