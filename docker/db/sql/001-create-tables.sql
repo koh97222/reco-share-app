@@ -12,7 +12,7 @@ create table IF not exists `samples`
     PRIMARY KEY (`id`)
 );
 ---- insert ----
-INSERT INTO samples values (1,'sample',CURRENT_TIMESTAMP(),CURRENT_TIMESTAMP(),NULL)
+INSERT INTO samples values (1,'sample',CURRENT_TIMESTAMP(),CURRENT_TIMESTAMP(),NULL);
 
 ---- drop ----
 DROP TABLE IF EXISTS `users`;
