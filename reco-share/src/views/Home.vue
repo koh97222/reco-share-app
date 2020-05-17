@@ -4,7 +4,7 @@
       <b-col xl="2"></b-col>
       <b-col cols="12" xl="7" class="home">
         <div class="mt-4"></div>
-        <b-card tag="article" class="mt-4 mb-3">
+        <b-card tag="article" class="mt-4 mb-4">
           <b-carousel
             id="carousel-fade"
             style="text-shadow: 0px 0px 2px #000"
@@ -27,7 +27,7 @@
             ></b-carousel-slide>
           </b-carousel>
         </b-card>
-        <b-card tag="article" class="mb-4 pd-40">
+        <b-card tag="article" class="mt-4 mb-4 pd-40">
           <h3>
             Let's go on a journey to find the <span class="e5b848">M</span>usic!
           </h3>
@@ -43,7 +43,6 @@
                 <b-input
                   id="inline-form-input-name"
                   placeholder="ユーザ名、またはメールアドレス"
-                  aria-describedby="password-help-block"
                   v-model="users.user"
                 ></b-input>
               </b-input-group>
@@ -62,7 +61,7 @@
           <br />
 
           <b-button
-            class="mt-3"
+            class="mt-3 mb-3"
             href="#"
             :disabled="isInputForm"
             @click="login(users)"
@@ -70,27 +69,32 @@
           /></b-button>
 
           <hr />
-          <p>アカウントをお持ちでないですか？</p>
+          <p class="mt-5">アカウントをお持ちでないですか？</p>
           <b-button @click="guestLogin()"
             >おためしログイン<font-awesome-icon icon="sign-in-alt"
           /></b-button>
           <br />
-          <b-button class="mt-1 mb-5"
+          <b-button
+            v-b-modal.modal-1
+            @click="showRegistModal()"
+            class="mt-1 mb-5"
+            ref="btnshow"
             >新規登録<font-awesome-icon icon="user-plus" class="ml-1"
           /></b-button>
         </b-card>
       </b-col>
       <b-col xl="3"></b-col>
     </b-row>
+    <user-registration ref="registModal"></user-registration>
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-
+import UserRegistration from "../components/UserRegistration.vue";
 export default {
   name: "Home",
-  components: {},
+  components: { UserRegistration },
   data() {
     return {
       res: null,
@@ -113,6 +117,14 @@ export default {
   },
 
   methods: {
+    guestLogin() {
+      let _self = this;
+      _self.$axios.post("http://localhost:8082/guestlogin").then((r) => {
+        if (r) {
+          console.log(r);
+        }
+      });
+    },
     login(users) {
       let _self = this;
       _self.$axios.post("http://localhost:8082/login", users).then((r) => {
@@ -121,13 +133,8 @@ export default {
         }
       });
     },
-    guestLogin() {
-      let _self = this;
-      _self.$axios.post("http://localhost:8082/guestlogin").then((r) => {
-        if (r) {
-          console.log(r);
-        }
-      });
+    showRegistModal() {
+      this.$refs.registModal.$refs["user-regist"].show();
     },
   },
 };
@@ -147,9 +154,6 @@ export default {
 .card {
   box-shadow: 2px 2px 4px #cccccc;
 }
-.pd-40 {
-  padding: 40px;
-}
 .e5b848 {
   color: #e5b848;
 }
@@ -161,6 +165,9 @@ export default {
 .home {
   background-color: #f4f5f7;
   box-shadow: 1px 1px 1px 1px #cccccc;
+}
+.pd-40 {
+  padding: 40px;
 }
 .title {
   font-weight: 800;

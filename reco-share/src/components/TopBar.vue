@@ -17,17 +17,27 @@
             /></b-nav-item>
           </div>
           <div class="mr-4">
-            <b-nav-item href="#">
+            <b-nav-item href="#" @click="showRegistModal()">
               新規ユーザ登録<font-awesome-icon icon="user-plus" class="ml-1" />
             </b-nav-item>
           </div>
         </b-navbar-nav>
       </b-collapse>
     </b-navbar>
+    <user-registration ref="registModal"></user-registration>
   </div>
 </template>
 <script>
-export default {};
+import UserRegistration from "./UserRegistration.vue";
+
+export default {
+  components: { UserRegistration },
+  methods: {
+    showRegistModal() {
+      this.$refs.registModal.$refs["user-regist"].show();
+    },
+  },
+};
 </script>
 <style scoped>
 .e5b848 {
