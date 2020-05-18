@@ -1,15 +1,36 @@
 <template>
   <div class="top-bar">
     <b-navbar class="gothic" toggleable="lg" style="background-color:white;">
-      <b-navbar-brand tag="h1" href="#">
+      <b-navbar-brand tag="h1" href="/">
         <div class="ml-5">
           reco<span class="e5b848">×</span>share
           <font-awesome-icon icon="headphones-alt" class="ml-1" />
         </div>
       </b-navbar-brand>
       <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
+
       <b-collapse id="nav-collapse" is-nav>
-        <b-navbar-nav class="ml-auto">
+        <b-navbar-nav class="ml-auto" v-if="isLogin">
+          <div class="mr-4">
+            <b-nav-item href="#">
+              投稿する
+              <font-awesome-icon icon="blog"
+            /></b-nav-item>
+          </div>
+          <div class="mr-4">
+            <b-nav-item href="#">
+              通知
+              <font-awesome-icon icon="heart"
+            /></b-nav-item>
+          </div>
+          <div class="mr-4">
+            <b-nav-item href="#" style="padding:0px 10px">
+              <font-awesome-icon icon="user-circle"
+            /></b-nav-item>
+          </div>
+        </b-navbar-nav>
+
+        <b-navbar-nav class="ml-auto" v-if="!isLogin">
           <div class="mr-4">
             <b-nav-item href="#">
               Sign In
@@ -32,6 +53,17 @@ import UserRegistration from "./UserRegistration.vue";
 
 export default {
   components: { UserRegistration },
+  data() {
+    return {
+      isLogin: false,
+    };
+  },
+  created() {
+    if (sessionStorage.getItem("/")) {
+      this.isLogin = true;
+      console.log("aaa");
+    }
+  },
   methods: {
     showRegistModal() {
       this.$refs.registModal.$refs["user-regist"].show();

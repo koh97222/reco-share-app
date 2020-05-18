@@ -121,7 +121,8 @@ export default {
       let _self = this;
       _self.$axios.post("http://localhost:8082/guestlogin").then((r) => {
         if (r) {
-          console.log(r);
+          sessionStorage.setItem("/", r);
+          location.href = "http://localhost:8080/timeline";
         }
       });
     },
