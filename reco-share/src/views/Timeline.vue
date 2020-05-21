@@ -13,7 +13,7 @@
         <post class="mt-5"></post>
         <post class="mt-5"></post>
         <b-button
-          class="mt-5 mb-5"
+          class="mt-5 mb-5 view-more"
           style="background-color:black; font-weight:400"
           >VIEW MORE</b-button
         >
@@ -38,10 +38,6 @@ export default {
 .badge-secondary {
   width: 60px;
 }
-.btn {
-  width: 300px;
-  height: 50px;
-}
 .fw-700 {
   font-weight: 700;
 }
@@ -50,5 +46,9 @@ export default {
 }
 .title {
   padding: 15px;
+}
+.view-more {
+  width: 300px;
+  height: 50px;
 }
 </style>
