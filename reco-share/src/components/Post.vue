@@ -47,5 +47,9 @@ export default {};
 <style scoped>
 .post {
   box-shadow: 2px 2px 4px #cccccc;
+  transition: 0.3s;
+}
+.post:hover {
+  transform: scale(1.03, 1.03);
 }
 </style>
