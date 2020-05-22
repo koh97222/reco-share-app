@@ -135,6 +135,7 @@ export default {
       });
     },
     showRegistModal() {
+      this.$refs.registModal.init();
       this.$refs.registModal.$refs["user-regist"].show();
     },
   },
