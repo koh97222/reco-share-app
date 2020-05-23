@@ -125,7 +125,7 @@ export default {
       let regex = RegExp(
         "/^[a-zA-Z0-9.!#$%&'*+\\/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$/"
       );
-      if (regex.test(userInfo.password)) {
+      if (!regex.test(userInfo.password)) {
         this.validateErrorList.push("メールアドレスの形式で入力してください。");
         console.log("huhu");
       }
