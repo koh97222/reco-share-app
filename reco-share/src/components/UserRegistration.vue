@@ -21,33 +21,26 @@
           <b-col xl="1"></b-col>
           <b-col xl="10">
             <b-input-group prepend="@">
-              <b-input
-                id="inline-form-input-name"
-                placeholder="ユーザ名"
-                v-model="userInfo.userName"
-              ></b-input>
+              <b-input placeholder="ユーザ名" v-model="userInfo.user"></b-input>
             </b-input-group>
             <b-input-group class="mt-1">
               <b-input
-                id="inline-form-input-mailaddress"
                 placeholder="メールアドレス"
-                v-model="userInfo.mail"
+                v-model="userInfo.email"
               ></b-input>
             </b-input-group>
             <b-input-group class="mt-1">
               <b-input
-                id="text-password"
                 type="password"
                 placeholder="パスワード(6文字以上)"
-                v-model="userInfo.password"
+                v-model="userInfo.pass"
               ></b-input>
             </b-input-group>
             <b-input-group class="mt-1">
               <b-input
-                id="text-password-retyping"
                 type="password"
                 placeholder="パスワード(再入力)"
-                v-model="userInfo.confirmedPassword"
+                v-model="userInfo.confirmedPass"
               ></b-input>
             </b-input-group>
           </b-col>
@@ -72,10 +65,10 @@ export default {
   data() {
     return {
       userInfo: {
-        userName: null,
-        mail: null,
-        password: null,
-        confirmedPassword: null,
+        user: null,
+        email: null,
+        pass: null,
+        confirmedPass: null,
       },
       validateErrorList: [],
     };
@@ -84,51 +77,66 @@ export default {
     isNotInputForm() {
       return (
         // もう少しスマートに書きたい
-        this.userInfo.userName == null ||
-        this.userInfo.userName == "" ||
-        this.userInfo.mail == null ||
-        this.userInfo.mail == "" ||
-        this.userInfo.password == null ||
-        this.userInfo.password == "" ||
-        this.userInfo.confirmedPassword == null ||
-        this.userInfo.confirmedPassword == ""
+        this.userInfo.user == null ||
+        this.userInfo.user == "" ||
+        this.userInfo.email == null ||
+        this.userInfo.email == "" ||
+        this.userInfo.pass == null ||
+        this.userInfo.pass == "" ||
+        this.userInfo.confirmedPass == null ||
+        this.userInfo.confirmedPass == ""
       );
     },
   },
   methods: {
     // もう少しスマートに初期化したい。
     init() {
-      this.userInfo.userName = null;
-      this.userInfo.mail = null;
-      this.userInfo.password = null;
-      this.userInfo.confirmedPassword = null;
+      this.userInfo.user = null;
+      this.userInfo.email = null;
+      this.userInfo.pass = null;
+      this.userInfo.confirmedPass = null;
       this.validateErrorList = [];
     },
     preValidate(userInfo) {
-      console.log(userInfo);
       this.validateErrorList = [];
       // パスワードと確認パスワードを比較し、同じでなければエラー
-      if (userInfo.password !== userInfo.confirmedPassword) {
+      if (userInfo.pass !== userInfo.confirmedPass) {
         this.validateErrorList.push(
           "入力されたパスワードと確認用パスワードが異なります。"
         );
       }
 
       // パスワードが6文字以上でなければエラー
-      if (userInfo.password.length < 6) {
+      if (userInfo.pass.length < 6) {
         this.validateErrorList.push(
           "パスワードは6文字以上で入力してください。"
         );
       }
       // メールアドレスの形式でなければエラー
-      // TODO:機能しない。修正が必要。
-      let regex = RegExp(
+      // TODO:バリデーション対応させる。
+      let regex = new RegExp(
         "/^[a-zA-Z0-9.!#$%&'*+\\/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$/"
       );
-      if (!regex.test(userInfo.password)) {
+      if (regex.test(userInfo.email)) {
         this.validateErrorList.push("メールアドレスの形式で入力してください。");
-        console.log("huhu");
       }
+      // エラーがない場合は、登録処理に進む。
+      if (this.validateErrorList.length == 0) {
+        this.registUser(userInfo);
+      }
+    },
+    registUser(userInfo) {
+      this.$axios
+        .post("http://localhost:8082/registuser", userInfo)
+        .then((r) => {
+          if (r.status == 200) {
+            if (r.data.resultCode == "80") {
+              this.validateErrorList.push("ユーザ名が既に登録されています。");
+            } else {
+              this.$refs["user-regist"].hide();
+            }
+          }
+        });
     },
   },
 };

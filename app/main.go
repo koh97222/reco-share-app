@@ -5,17 +5,10 @@ import (
 	"net/http"
 
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/jinzhu/gorm"
 
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
 )
-
-// Sample samplesテーブルに対応する構造体
-type Sample struct {
-	Name string `gorm:"column:name"`
-	gorm.Model
-}
 
 // User ログイン時に送信される情報に対応する構造体
 type User struct {
@@ -25,12 +18,10 @@ type User struct {
 	Email  string `gorm:"column:email"`
 }
 
-func getSample() []Sample {
-	db := db.GormConnect()
-	sample := []Sample{}
-	db.Find(&sample)
-	defer db.Close()
-	return sample
+// Response APIのレスポンス結果に対応する構造体
+type Response struct {
+	ResultCode    string `json:"resultCode"`
+	ResultMessage string `json:"resultMessage"`
 }
 
 func guestLogin() User {
@@ -41,14 +32,49 @@ func guestLogin() User {
 	return user
 }
 
+// registUser　ユーザ登録メソッド
+func registUser(u User) {
+	db := db.GormConnect()
+	db.Create(u)
+	defer db.Close()
+}
+
+// userDuplicateCheck ユーザ名重複確認メソッド
+func userDuplicateCheck(u User) bool {
+	db := db.GormConnect()
+	user := User{}
+	db.Where("user_nm = ?", u.User).Find(&user)
+	defer db.Close()
+	if user.UserID == 0 {
+		return false
+	}
+	return true
+}
+
+// registUserHandler ユーザ登録のハンドラ
+func registUserHandler(c echo.Context) error {
+	r := Response{}
+	user := new(User)
+	if err := c.Bind(user); err != nil {
+		return err
+	}
+	// 既に同じユーザ名が登録されていない場合、登録を行う。
+	if !userDuplicateCheck(*user) {
+		registUser(*user)
+		r.ResultCode = "00"
+		r.ResultMessage = "registerd"
+	} else {
+		r.ResultCode = "80"
+		r.ResultMessage = "Not registerd"
+	}
+	return c.JSON(http.StatusOK, r)
+}
+
 func main() {
 	e := echo.New()
 	e.Use(middleware.CORS())
 	e.GET("/", func(c echo.Context) error {
 		return c.String(http.StatusOK, "hello")
-	})
-	e.GET("/sample", func(c echo.Context) error {
-		return c.JSON(http.StatusOK, getSample())
 	})
 	// e.POST("/login", func(c echo.Context) error {
 	// 	login := User{}
@@ -59,5 +85,6 @@ func main() {
 	e.POST("/guestlogin", func(c echo.Context) error {
 		return c.JSON(http.StatusOK, guestLogin())
 	})
+	e.POST("/registuser", registUserHandler)
 	e.Logger.Fatal(e.Start(":8082"))
 }
