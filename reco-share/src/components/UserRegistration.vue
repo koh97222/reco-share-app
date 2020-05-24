@@ -58,6 +58,20 @@
         </b-button>
       </template>
     </b-modal>
+    <b-modal centered ref="after-regist" ok-only>
+      <h3 class="text-center mb-3">
+        User registration is complete.
+      </h3>
+
+      <p class="text-center">
+        reco<span class="e5b848">×</span>share
+        <font-awesome-icon icon="headphones-alt" class="ml-1" />
+        へのご登録ありがとうございます。
+      </p>
+      <template v-slot:modal-footer>
+        <b-button size="sm" variant="secondary" @click="close">閉じる</b-button>
+      </template>
+    </b-modal>
   </div>
 </template>
 <script>
@@ -89,6 +103,9 @@ export default {
     },
   },
   methods: {
+    close() {
+      this.$refs["after-regist"].hide();
+    },
     // もう少しスマートに初期化したい。
     init() {
       this.userInfo.user = null;
@@ -134,6 +151,7 @@ export default {
               this.validateErrorList.push("ユーザ名が既に登録されています。");
             } else {
               this.$refs["user-regist"].hide();
+              this.$refs["after-regist"].show();
             }
           }
         });
