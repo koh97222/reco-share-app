@@ -39,13 +39,13 @@ func registUser(u User) {
 	defer db.Close()
 }
 
-// userDuplicateCheck ユーザ名重複確認メソッド
-func userDuplicateCheck(u User) bool {
+// isUserAlreadyRegistered ユーザ名重複確認メソッド
+func isUserAlreadyRegistered(u User) bool {
 	db := db.GormConnect()
 	user := User{}
-	db.Where("user_nm = ?", u.User).Find(&user)
+	recordNotFound := db.Where("user_nm = ?", u.User).Find(&user).RecordNotFound()
 	defer db.Close()
-	if user.UserID == 0 {
+	if recordNotFound {
 		return false
 	}
 	return true
@@ -59,7 +59,7 @@ func registUserHandler(c echo.Context) error {
 		return err
 	}
 	// 既に同じユーザ名が登録されていない場合、登録を行う。
-	if !userDuplicateCheck(*user) {
+	if !isUserAlreadyRegistered(*user) {
 		registUser(*user)
 		r.ResultCode = "00"
 		r.ResultMessage = "registerd"
@@ -70,18 +70,23 @@ func registUserHandler(c echo.Context) error {
 	return c.JSON(http.StatusOK, r)
 }
 
+// loginHandler ログインのハンドラ
+// func loginHandler(c echo.Context) error {
+// 	r := Response{}
+// 	user := new(User)
+// 	if err := c.Bind(user); err != nil {
+// 		return err
+// 	}
+// 	return c.JSON(http.StatusOK, r)
+// }
+
 func main() {
 	e := echo.New()
 	e.Use(middleware.CORS())
 	e.GET("/", func(c echo.Context) error {
 		return c.String(http.StatusOK, "hello")
 	})
-	// e.POST("/login", func(c echo.Context) error {
-	// 	login := User{}
-	// 	login.User = c.QueryParam("users")
-	// 	login.Pass = c.QueryParam("users.pass")
-	// 	return c.JSON(http.StatusOK, login)
-	// })
+	// e.POST("/login", loginHandler)
 	e.POST("/guestlogin", func(c echo.Context) error {
 		return c.JSON(http.StatusOK, guestLogin())
 	})
