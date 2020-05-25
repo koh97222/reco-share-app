@@ -21,7 +21,10 @@
           <b-col xl="1"></b-col>
           <b-col xl="10">
             <b-input-group prepend="@">
-              <b-input placeholder="ユーザ名" v-model="userInfo.user"></b-input>
+              <b-input
+                placeholder="ユーザ名"
+                v-model="userInfo.userNm"
+              ></b-input>
             </b-input-group>
             <b-input-group class="mt-1">
               <b-input
@@ -79,7 +82,7 @@ export default {
   data() {
     return {
       userInfo: {
-        user: null,
+        userNm: null,
         email: null,
         pass: null,
         confirmedPass: null,
@@ -91,8 +94,8 @@ export default {
     isNotInputForm() {
       return (
         // もう少しスマートに書きたい
-        this.userInfo.user == null ||
-        this.userInfo.user == "" ||
+        this.userInfo.userNm == null ||
+        this.userInfo.userNm == "" ||
         this.userInfo.email == null ||
         this.userInfo.email == "" ||
         this.userInfo.pass == null ||
@@ -108,7 +111,7 @@ export default {
     },
     // もう少しスマートに初期化したい。
     init() {
-      this.userInfo.user = null;
+      this.userInfo.userNm = null;
       this.userInfo.email = null;
       this.userInfo.pass = null;
       this.userInfo.confirmedPass = null;

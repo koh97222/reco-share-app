@@ -35,6 +35,9 @@
             好きな音楽・レコードを見つける<br />
             旅に出ましょう<font-awesome-icon icon="plane" class="ml-1" />
           </p>
+          <p v-if="loginFailure" style="color:red">
+            ユーザ名、またはパスワードが間違っています。
+          </p>
           <label class="sr-only" for="inline-form-input-name">Name</label>
           <b-row>
             <b-col xl="2"></b-col>
@@ -43,7 +46,7 @@
                 <b-input
                   id="inline-form-input-name"
                   placeholder="ユーザ名、またはメールアドレス"
-                  v-model="users.user"
+                  v-model="users.userNm"
                 ></b-input>
               </b-input-group>
 
@@ -99,18 +102,19 @@ export default {
     return {
       res: null,
       users: {
-        user: null,
+        userNm: null,
         pass: null,
       },
+      loginFailure: false,
     };
   },
   created() {},
   computed: {
     isInputForm() {
       return (
-        this.users.user == null ||
+        this.users.userNm == null ||
         this.users.pass == null ||
-        this.users.user == "" ||
+        this.users.userNm == "" ||
         this.users.pass == ""
       );
     },
@@ -128,9 +132,15 @@ export default {
     },
     login(users) {
       let _self = this;
+      _self.loginFailure = false;
       _self.$axios.post("http://localhost:8082/login", users).then((r) => {
-        if (r) {
-          console.log(r);
+        // ログイン成功時は、タイムライン画面に遷移する。
+        if (r.data.resultCode == "00") {
+          sessionStorage.setItem("/", JSON.stringify(r.data));
+          location.href = "http://localhost:8080/timeline";
+        } else {
+          // ログイン失敗時は、ログイン失敗の文言を画面に表示する。
+          _self.loginFailure = true;
         }
       });
     },

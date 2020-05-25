@@ -13,7 +13,7 @@ import (
 // User ログイン時に送信される情報に対応する構造体
 type User struct {
 	UserID int    `gorm:"column:user_id"`
-	User   string `gorm:"column:user_nm"`
+	UserNm string `gorm:"column:user_nm"`
 	Pass   string `gorm:"column:password"`
 	Email  string `gorm:"column:email"`
 }
@@ -22,6 +22,7 @@ type User struct {
 type Response struct {
 	ResultCode    string `json:"resultCode"`
 	ResultMessage string `json:"resultMessage"`
+	User
 }
 
 func guestLogin() User {
@@ -43,12 +44,36 @@ func registUser(u User) {
 func isUserAlreadyRegistered(u User) bool {
 	db := db.GormConnect()
 	user := User{}
-	recordNotFound := db.Where("user_nm = ?", u.User).Find(&user).RecordNotFound()
+	recordNotFound := db.Where("user_nm = ?", u.UserNm).Find(&user).RecordNotFound()
 	defer db.Close()
 	if recordNotFound {
 		return false
 	}
 	return true
+}
+
+// login ログインメソッド
+// ここでは簡易的にユーザ名とパスワードが合っている場合、trueを返す。
+// TODO:認証機能を実装すること。
+func login(u User) bool {
+	db := db.GormConnect()
+	user := User{}
+	recordNotFound := db.Where("user_nm = ? AND password = ?", u.UserNm, u.Pass).Find(&user).RecordNotFound()
+	defer db.Close()
+	if recordNotFound {
+		return false
+	}
+	return true
+}
+
+// getUserInfo ユーザ情報取得
+// ユーザ名に紐づく情報を取得し、返却する。
+func getUserInfo(userNm string) User {
+	db := db.GormConnect()
+	user := User{}
+	db.Where("user_nm = ?", userNm).Find(&user)
+	defer db.Close()
+	return user
 }
 
 // registUserHandler ユーザ登録のハンドラ
@@ -71,14 +96,26 @@ func registUserHandler(c echo.Context) error {
 }
 
 // loginHandler ログインのハンドラ
-// func loginHandler(c echo.Context) error {
-// 	r := Response{}
-// 	user := new(User)
-// 	if err := c.Bind(user); err != nil {
-// 		return err
-// 	}
-// 	return c.JSON(http.StatusOK, r)
-// }
+func loginHandler(c echo.Context) error {
+	r := new(Response)
+	user := new(User)
+	if err := c.Bind(user); err != nil {
+		return err
+	}
+	// ログイン成功時、ユーザ情報をさらに取得し、返却をする。
+	if login(*user) {
+		user := getUserInfo(user.UserNm)
+		r.ResultCode = "00"
+		r.ResultMessage = "login success"
+		r.UserID = user.UserID
+		r.UserNm = user.UserNm
+	} else {
+		// ログイン失敗時
+		r.ResultCode = "80"
+		r.ResultMessage = "login failure"
+	}
+	return c.JSON(http.StatusOK, r)
+}
 
 func main() {
 	e := echo.New()
@@ -86,7 +123,7 @@ func main() {
 	e.GET("/", func(c echo.Context) error {
 		return c.String(http.StatusOK, "hello")
 	})
-	// e.POST("/login", loginHandler)
+	e.POST("/login", loginHandler)
 	e.POST("/guestlogin", func(c echo.Context) error {
 		return c.JSON(http.StatusOK, guestLogin())
 	})
