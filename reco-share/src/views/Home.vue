@@ -136,7 +136,13 @@ export default {
       _self.$axios.post("http://localhost:8082/login", users).then((r) => {
         // ログイン成功時は、タイムライン画面に遷移する。
         if (r.data.resultCode == "00") {
-          sessionStorage.setItem("/", JSON.stringify(r.data));
+          let now = new Date();
+          now.setMinutes(now.getMinutes() + 10); // 10分後に設定。
+          document.cookie =
+            "id=" +
+            encodeURIComponent(r.data.UserID) +
+            ";expires=" +
+            now.toUTCString();
           location.href = "http://localhost:8080/timeline";
         } else {
           // ログイン失敗時は、ログイン失敗の文言を画面に表示する。
