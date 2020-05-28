@@ -18,10 +18,17 @@
             /></b-nav-item>
           </div>
           <div class="mr-4">
-            <b-nav-item href="#">
+            <b-nav-item href="#" id="notice">
               通知
               <font-awesome-icon icon="heart"
             /></b-nav-item>
+            <b-popover target="notice" triggers="click" placement="top">
+              <template v-slot:title>最近のアクティビティ</template>
+              <p>
+                Aさんにフォローされました。<br />
+                Bさんにいいねされました。
+              </p>
+            </b-popover>
           </div>
           <div class="mr-4">
             <b-nav-item href="#" style="padding:0px 10px">
