@@ -10,6 +10,7 @@
       <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
       <b-collapse id="nav-collapse" is-nav>
+        <!-- ログイン後 -->
         <b-navbar-nav class="ml-auto" v-if="isLogin">
           <div class="mr-4">
             <b-nav-item href="#">
@@ -31,12 +32,13 @@
             </b-popover>
           </div>
           <div class="mr-4">
-            <b-nav-item href="#" style="padding:0px 10px">
+            <b-nav-item href="/mypage" style="padding:0px 10px">
               <font-awesome-icon icon="user-circle"
             /></b-nav-item>
           </div>
         </b-navbar-nav>
 
+        <!-- ログイン前 -->
         <b-navbar-nav class="ml-auto" v-if="!isLogin">
           <div class="mr-4">
             <b-nav-item href="#">
