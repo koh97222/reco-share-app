@@ -66,9 +66,8 @@ export default {
     };
   },
   created() {
-    if (sessionStorage.getItem("/")) {
+    if (document.cookie) {
       this.isLogin = true;
-      console.log("aaa");
     }
   },
   methods: {
