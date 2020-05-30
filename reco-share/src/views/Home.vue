@@ -125,7 +125,13 @@ export default {
       let _self = this;
       _self.$axios.post("http://localhost:8082/guestlogin").then((r) => {
         if (r) {
-          sessionStorage.setItem("/", r);
+          let now = new Date();
+          now.setMinutes(now.getMinutes() + 10); // 10分後に設定。
+          document.cookie =
+            "id=" +
+            encodeURIComponent(r.data.UserID) +
+            ";expires=" +
+            now.toUTCString();
           location.href = "http://localhost:8080/timeline";
         }
       });

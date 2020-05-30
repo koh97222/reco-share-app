@@ -1,7 +1,7 @@
 <template>
   <div class="top-bar">
     <b-navbar class="gothic" toggleable="lg" style="background-color:white;">
-      <b-navbar-brand tag="h1" href="/">
+      <b-navbar-brand tag="h1" href="/" @click="home">
         <div class="ml-5">
           reco<span class="e5b848">×</span>share
           <font-awesome-icon icon="headphones-alt" class="ml-1" />
@@ -76,6 +76,12 @@ export default {
     showRegistModal() {
       this.$refs.registModal.init();
       this.$refs.registModal.$refs["user-regist"].show();
+    },
+    home() {
+      // TODO:
+      // セッション情報が期限切れでない場合、タイムライン画面。
+      // そうでない場合、ログイン画面に遷移する。
+      console.log(document.cookie);
     },
   },
 };
