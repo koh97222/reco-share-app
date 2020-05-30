@@ -34,7 +34,9 @@
           <div class="img">
             image
           </div>
-          <hr />
+          <template v-slot:footer class="message mt-4">
+            <p>textが入ります。textが入ります。textが入ります。</p>
+          </template>
         </b-card>
       </b-col>
       <b-col xl="2"></b-col>
@@ -51,5 +53,11 @@ export default {};
 }
 .post:hover {
   transform: scale(1.03, 1.03);
+}
+.card-footer {
+  color: #cccccc;
+  background-color: #10100e;
+  box-shadow: 2px 2px 4px #cccccc;
+  opacity: 0.9;
 }
 </style>

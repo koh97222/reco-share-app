@@ -13,7 +13,7 @@
         <!-- ログイン後 -->
         <b-navbar-nav class="ml-auto" v-if="isLogin">
           <div class="mr-4">
-            <b-nav-item href="#">
+            <b-nav-item href="#" @click="openNewPost">
               投稿する
               <font-awesome-icon icon="blog"
             /></b-nav-item>
@@ -55,13 +55,15 @@
       </b-collapse>
     </b-navbar>
     <user-registration ref="registModal"></user-registration>
+    <new-post ref="postModal"></new-post>
   </div>
 </template>
 <script>
 import UserRegistration from "./UserRegistration.vue";
+import NewPost from "./NewPost.vue";
 
 export default {
-  components: { UserRegistration },
+  components: { UserRegistration, NewPost },
   data() {
     return {
       isLogin: false,
@@ -82,6 +84,9 @@ export default {
       // セッション情報が期限切れでない場合、タイムライン画面。
       // そうでない場合、ログイン画面に遷移する。
       console.log(document.cookie);
+    },
+    openNewPost() {
+      this.$refs.postModal.$refs["new-post"].show();
     },
   },
 };
