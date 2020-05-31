@@ -54,11 +54,12 @@
         </b-navbar-nav>
       </b-collapse>
     </b-navbar>
-    <user-registration ref="registModal"></user-registration>
-    <new-post ref="postModal"></new-post>
+    <user-registration></user-registration>
+    <new-post></new-post>
   </div>
 </template>
 <script>
+import Eventbus from "../eventbus.js";
 import UserRegistration from "./UserRegistration.vue";
 import NewPost from "./NewPost.vue";
 
@@ -76,8 +77,7 @@ export default {
   },
   methods: {
     showRegistModal() {
-      this.$refs.registModal.init();
-      this.$refs.registModal.$refs["user-regist"].show();
+      Eventbus.$emit("open-registration-modal");
     },
     home() {
       // TODO:
@@ -86,7 +86,7 @@ export default {
       console.log(document.cookie);
     },
     openNewPost() {
-      this.$refs.postModal.$refs["new-post"].show();
+      Eventbus.$emit("open-newpost-modal");
     },
   },
 };

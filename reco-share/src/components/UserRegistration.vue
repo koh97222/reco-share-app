@@ -78,6 +78,8 @@
   </div>
 </template>
 <script>
+import Eventbus from "../eventbus.js";
+
 export default {
   data() {
     return {
@@ -104,6 +106,12 @@ export default {
         this.userInfo.confirmedPass == ""
       );
     },
+  },
+  created() {
+    Eventbus.$on("open-registration-modal", () => {
+      this.init();
+      this.$refs["user-regist"].show();
+    });
   },
   methods: {
     close() {

@@ -22,7 +22,14 @@
   </div>
 </template>
 <script>
-export default {};
+import EventBus from "../eventbus.js";
+export default {
+  created() {
+    EventBus.$on("open-newpost-modal", () => {
+      this.$refs["new-post"].show();
+    });
+  },
+};
 </script>
 <style scoped>
 .btn {

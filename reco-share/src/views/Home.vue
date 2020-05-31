@@ -88,16 +88,15 @@
       </b-col>
       <b-col xl="3"></b-col>
     </b-row>
-    <user-registration ref="registModal"></user-registration>
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import UserRegistration from "../components/UserRegistration.vue";
+import Eventbus from "../eventbus";
 export default {
   name: "Home",
-  components: { UserRegistration },
+  components: {},
   data() {
     return {
       res: null,
@@ -157,8 +156,7 @@ export default {
       });
     },
     showRegistModal() {
-      this.$refs.registModal.init();
-      this.$refs.registModal.$refs["user-regist"].show();
+      Eventbus.$emit("open-registration-modal");
     },
   },
 };
