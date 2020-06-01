@@ -29,6 +29,16 @@ export default {
       this.$refs["new-post"].show();
     });
   },
+  data() {
+    return {
+      post: {
+        UserID: null,
+        title: null,
+        tag: [],
+        description: null,
+      },
+    };
+  },
 };
 </script>
 <style scoped>

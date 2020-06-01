@@ -27,4 +27,22 @@ create table IF not exists `users`
     PRIMARY KEY (`user_id`)
 );
 ---- insert ----
-INSERT INTO users values (1,'ゲスト','guest_pass','guest@email.com')
+INSERT INTO users values (1,'ゲスト','guest_pass','gu@email.com');
+
+---- drop ----
+DROP TABLE IF EXISTS `posts`;
+
+---- create ----
+create table IF not exists `posts`
+(
+ `post_id`          INT(20) AUTO_INCREMENT,
+ `title`            VARCHAR(20) NOT NULL,
+ `tag_id`           INT(20),
+ `description`      VARCHAR(255) NOT NULL,
+ `user_id`          INT(20) NOT NULL,
+    PRIMARY KEY (`post_id`)
+);
+
+INSERT INTO posts values (1,'サンプル投稿',1,'初めての投稿です。',1);
+
+
