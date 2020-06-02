@@ -18,11 +18,26 @@ type User struct {
 	Email  string `gorm:"column:email"`
 }
 
-// Response APIのレスポンス結果に対応する構造体
+// Response APIのレスポンス結果に対応する汎用的な構造体
 type Response struct {
 	ResultCode    string `json:"resultCode"`
 	ResultMessage string `json:"resultMessage"`
 	User
+}
+
+// Post 記事投稿時に送信される情報に対応する構造体
+type Post struct {
+	PostID      int    `gorm:"column:post_id"`
+	Title       string `gorm:"column:title"`
+	TagID       int    `gorm:"column:tag_id"`
+	Description string `gorm:"column:description"`
+	UserID      int    `gorm:"column:user_id"`
+}
+
+// Tag 記事投稿のタグIDに紐づくタグテーブルに対応する構造体
+type Tag struct {
+	TagID   int
+	Content string
 }
 
 func guestLogin() User {
@@ -76,6 +91,13 @@ func getUserInfo(userNm string) User {
 	return user
 }
 
+// registArticle 記事投稿登録メソッド
+func registArticle(p Post) {
+	db := db.GormConnect()
+	db.Create(p)
+	defer db.Close()
+}
+
 // registUserHandler ユーザ登録のハンドラ
 func registUserHandler(c echo.Context) error {
 	r := Response{}
@@ -92,6 +114,22 @@ func registUserHandler(c echo.Context) error {
 		r.ResultCode = "80"
 		r.ResultMessage = "Not registerd"
 	}
+	return c.JSON(http.StatusOK, r)
+}
+
+// postArticleHandler 記事投稿のハンドラ
+func postArticleHandler(c echo.Context) error {
+	r := new(Response)
+	post := new(Post)
+	if err := c.Bind(post); err != nil {
+		return err
+	}
+	// TODO:タグを登録する。発番されたtagIDを変数に格納する。
+
+	// 投稿を登録する。
+	registArticle(*post)
+	// 仮
+	r.ResultCode = "00"
 	return c.JSON(http.StatusOK, r)
 }
 
@@ -128,5 +166,6 @@ func main() {
 		return c.JSON(http.StatusOK, guestLogin())
 	})
 	e.POST("/registuser", registUserHandler)
+	e.POST("/postarticle", postArticleHandler)
 	e.Logger.Fatal(e.Start(":8082"))
 }
