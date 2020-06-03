@@ -10,6 +10,12 @@ import (
 	"github.com/labstack/echo/middleware"
 )
 
+// 定数
+const (
+	SuccessCode = "00" // 処理成功時
+	FailedCode  = "80" // 処理失敗時
+)
+
 // User ログイン時に送信される情報に対応する構造体
 type User struct {
 	UserID int    `gorm:"column:user_id"`
@@ -40,6 +46,16 @@ type Tag struct {
 	Content string
 }
 
+// Response構造体の初期化
+// 基本的に処理失敗時のみ、ResultCodeを変更するようにしたい。
+func initResponse() *Response {
+	r := new(Response)
+	r.ResultCode = SuccessCode
+	r.ResultMessage = ""
+	return r
+}
+
+// guestLogin お試しログイン時に、お試し用のユーザ情報を返却するメソッド
 func guestLogin() User {
 	db := db.GormConnect()
 	user := User{}
@@ -92,15 +108,19 @@ func getUserInfo(userNm string) User {
 }
 
 // registArticle 記事投稿登録メソッド
-func registArticle(p Post) {
+func registArticle(p Post, r *Response) *Response {
 	db := db.GormConnect()
-	db.Create(p)
+	if result := db.Create(p); result.Error != nil {
+		r.ResultCode = FailedCode
+		r.ResultMessage = "Registration Failed"
+	}
 	defer db.Close()
+	return r
 }
 
 // registUserHandler ユーザ登録のハンドラ
 func registUserHandler(c echo.Context) error {
-	r := Response{}
+	r := initResponse()
 	user := new(User)
 	if err := c.Bind(user); err != nil {
 		return err
@@ -108,10 +128,9 @@ func registUserHandler(c echo.Context) error {
 	// 既に同じユーザ名が登録されていない場合、登録を行う。
 	if !isUserAlreadyRegistered(*user) {
 		registUser(*user)
-		r.ResultCode = "00"
 		r.ResultMessage = "registerd"
 	} else {
-		r.ResultCode = "80"
+		r.ResultCode = FailedCode
 		r.ResultMessage = "Not registerd"
 	}
 	return c.JSON(http.StatusOK, r)
@@ -119,7 +138,7 @@ func registUserHandler(c echo.Context) error {
 
 // postArticleHandler 記事投稿のハンドラ
 func postArticleHandler(c echo.Context) error {
-	r := new(Response)
+	r := initResponse()
 	post := new(Post)
 	if err := c.Bind(post); err != nil {
 		return err
@@ -127,15 +146,13 @@ func postArticleHandler(c echo.Context) error {
 	// TODO:タグを登録する。発番されたtagIDを変数に格納する。
 
 	// 投稿を登録する。
-	registArticle(*post)
-	// 仮
-	r.ResultCode = "00"
+	r = registArticle(*post, r)
 	return c.JSON(http.StatusOK, r)
 }
 
 // loginHandler ログインのハンドラ
 func loginHandler(c echo.Context) error {
-	r := new(Response)
+	r := initResponse()
 	user := new(User)
 	if err := c.Bind(user); err != nil {
 		return err
@@ -143,13 +160,12 @@ func loginHandler(c echo.Context) error {
 	// ログイン成功時、ユーザ情報をさらに取得し、返却をする。
 	if login(*user) {
 		user := getUserInfo(user.UserNm)
-		r.ResultCode = "00"
 		r.ResultMessage = "login success"
 		r.UserID = user.UserID
 		r.UserNm = user.UserNm
 	} else {
 		// ログイン失敗時
-		r.ResultCode = "80"
+		r.ResultCode = FailedCode
 		r.ResultMessage = "login failure"
 	}
 	return c.JSON(http.StatusOK, r)
