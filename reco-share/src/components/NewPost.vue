@@ -15,7 +15,12 @@
         ></b-form-textarea>
       </b-input-group>
       <template v-slot:modal-footer>
-        <b-button size="sm" variant="secondary" @click="submit(post)">
+        <b-button
+          size="sm"
+          variant="secondary"
+          @click="submit(post)"
+          :disabled="disabledButton"
+        >
           投稿する <font-awesome-icon icon="blog" />
         </b-button>
       </template>
@@ -42,6 +47,11 @@ export default {
         description: null,
       },
     };
+  },
+  computed: {
+    disabledButton() {
+      return this.post.title == null || this.post.title == "";
+    },
   },
   methods: {
     submit(post) {
