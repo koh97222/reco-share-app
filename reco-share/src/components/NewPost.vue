@@ -32,6 +32,7 @@ import EventBus from "../eventbus.js";
 export default {
   created() {
     EventBus.$on("open-newpost-modal", () => {
+      this.init(this.post);
       this.$refs["new-post"].show();
     });
     // TODO:cookieからuserIDを取得し、格納する。
@@ -54,6 +55,13 @@ export default {
     },
   },
   methods: {
+    init(post) {
+      // スマートに書きたい
+      post.UserID = null;
+      post.title = null;
+      post.tag = null;
+      post.description = null;
+    },
     submit(post) {
       let _self = this;
       _self.$axios.post("http://localhost:8082/postarticle", post).then((r) => {
