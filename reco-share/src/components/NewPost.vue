@@ -2,6 +2,9 @@
   <div class="container">
     <b-modal centered size="lg" ref="new-post" ok-only>
       <h2 class="text-center">NEW POST</h2>
+      <b-alert variant="danger" show dismissible fade v-if="isError"
+        >投稿に失敗しました。</b-alert
+      >
       <b-input-group prepend="title" class="mt-4">
         <b-input placeholder="タイトル" v-model="post.title"></b-input>
       </b-input-group>
@@ -47,6 +50,7 @@ export default {
         tag: null,
         description: null,
       },
+      isError: false,
     };
   },
   computed: {
@@ -67,7 +71,7 @@ export default {
       _self.$axios.post("http://localhost:8082/postarticle", post).then((r) => {
         if (r.status == 200) {
           if (r.data.resultCode == "80") {
-            console.log("投稿に失敗しました。");
+            this.isError = true;
           } else {
             console.log("登録成功！！");
           }

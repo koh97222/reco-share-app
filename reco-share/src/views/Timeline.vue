@@ -26,6 +26,17 @@
 import Post from "../components/Post.vue";
 export default {
   components: { Post },
+  created() {},
+  data() {
+    return {
+      post: {
+        UserID: null,
+        title: null,
+        tag: null,
+        description: null,
+      },
+    };
+  },
 };
 </script>
 

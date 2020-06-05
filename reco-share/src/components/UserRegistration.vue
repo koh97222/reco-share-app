@@ -6,13 +6,10 @@
         <font-awesome-icon icon="headphones-alt" class="ml-1" />
       </h2>
       <p class="text-center">登録して友達の投稿を見てみよう。</p>
-      <div
-        class="text-center"
-        style="color:red"
-        v-for="(error, index) in validateErrorList"
-        :key="index"
-      >
-        {{ error }}
+      <div v-for="error in validateErrorList" :key="error">
+        <b-alert variant="danger" show fade v-if="validateErrorList != []">{{
+          error
+        }}</b-alert>
       </div>
 
       <hr />

@@ -35,9 +35,12 @@
             好きな音楽・レコードを見つける<br />
             旅に出ましょう<font-awesome-icon icon="plane" class="ml-1" />
           </p>
-          <p v-if="loginFailure" style="color:red">
+          <!-- <p v-if="loginFailure" style="color:red">
             ユーザ名、またはパスワードが間違っています。
-          </p>
+          </p> -->
+          <b-alert variant="danger" show fade v-if="loginFailure"
+            >ユーザ名、またはパスワードが間違っています。</b-alert
+          >
           <label class="sr-only" for="inline-form-input-name">Name</label>
           <b-row>
             <b-col xl="2"></b-col>
